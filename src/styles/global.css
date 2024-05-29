@@ -1,0 +1,15 @@
+:root {
+  --fs-xs: 1.2rem;
+  --fs-sm: 1.4rem;
+  --fs-md: 1.6rem;
+  --fs-lg: 1.8rem;
+  --fs-xl: 2rem;
+  --fs-2xl: 2.4rem;
+  --fs-3xl: 2.8rem;
+  --pd-text: 1rem 0 1.2rem;
+  --pd-content: 3rem;
+  --outer-bg-color: #e6e8f2;
+  --inner-bg-color: #ffffff;
+  --input-bg-color: #f2f2f2;
+  --sym-color: #0047ab;
+}
