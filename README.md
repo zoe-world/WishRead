@@ -1,5 +1,4 @@
-![logo](https://github.com/zoe-world/WishRead/assets/114548167/31f03525-860a-451f-98a4-e2f854daf278)
-
+![logo](https://github.com/zoe-world/Wishread/assets/114548167/ab9c46cd-519d-4178-a720-f213d850da72)
 # 📚 WISHREAD
 
 ## 프로젝트 시작 동기
