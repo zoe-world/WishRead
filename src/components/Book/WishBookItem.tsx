@@ -4,6 +4,8 @@ import styled from "styled-components";
 import WishBookItemInfo from "./WishBookItemInfo";
 import WishBookItemImg from "./WishBookItemImg";
 import media from "styles/media";
+import { detailState } from "recoil/atoms/atoms";
+import { useRecoilState } from "recoil";
 
 export interface ResultProps {
   key: number;
@@ -39,6 +41,7 @@ function WishBookItem({ result }: ResultProps): JSX.Element {
   } = result;
   let bookCode = isbn.split(" ").join("");
   const [watch, setWatch] = useState(true);
+  console.log(bookCode);
   return (
     <>
       <Wrapper key={result.isbn}>

@@ -22,8 +22,8 @@ export const bookmarkState = atom({
   default: [],
   effects_UNSTABLE: [persistAtom],
 });
-
-export const watchState = atom({
-  key: "watchState",
-  default: false,
+export const detailState = atom({
+  key: "detailState",
+  default: [],
+  effects_UNSTABLE: [persistAtom],
 });

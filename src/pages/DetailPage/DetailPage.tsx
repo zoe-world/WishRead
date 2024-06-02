@@ -8,7 +8,7 @@ import { BookDTO } from "components/types/searchType";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { bookmarkState, recentState } from "recoil/atoms/atoms";
+import { bookmarkState, detailState, recentState } from "recoil/atoms/atoms";
 import { filteredBookmarkSelector } from "recoil/selectors/selectors";
 import styled from "styled-components";
 import FootPage from "pages/MainPage/FootPage";
@@ -16,11 +16,12 @@ import FootPage from "pages/MainPage/FootPage";
 function DetailPage(): JSX.Element {
   const location = useLocation();
   // 선택된 책 정보
-  const result = location.state.result;
-  const barcode = location.state.result.isbn;
+  const result = location.state?.result;
+  const barcode = location.state?.result.isbn;
   // 선택됐는지 확인 여부
   const watch = location.state.watch;
   console.log(result);
+
   // 최근 검색기록
   const [recent, setRecent] = useRecoilState(recentState);
   const [bookmarkList, setBookmarkList] = useRecoilState(bookmarkState);
@@ -39,7 +40,13 @@ function DetailPage(): JSX.Element {
       }
     }
   }, [recent]);
-
+  const [detail, setDetail] = useRecoilState(detailState);
+  console.log(detail);
+  let detailCode = barcode;
+  detailCode = detailCode.split(" ").join("");
+  useEffect(() => {
+    setDetail(detailCode);
+  }, [detailCode]);
   // 뒤로가기
   const navigate = useNavigate();
   const goBack = () => {
@@ -47,7 +54,6 @@ function DetailPage(): JSX.Element {
   };
 
   // 나의 위시북
-
   const isWishBook = bookmarkList.find(({ isbn }: BookDTO) =>
     isbn.includes(String(barcode))
   );
