@@ -39,14 +39,13 @@ function WishBookItem({ result }: ResultProps): JSX.Element {
     translators,
     url,
   } = result;
-  let bookCode = isbn.split(" ").join("");
+  const [detail, setDetail] = useRecoilState(detailState);
   const [watch, setWatch] = useState(true);
-  console.log(bookCode);
   return (
     <>
       <Wrapper key={result.isbn}>
         <SLink
-          to={`${bookCode}`}
+          to={`${detail}`}
           state={{
             result: result,
             watch: watch,

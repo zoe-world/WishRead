@@ -40,13 +40,15 @@ function DetailPage(): JSX.Element {
       }
     }
   }, [recent]);
+
+  // 상세보기 책
   const [detail, setDetail] = useRecoilState(detailState);
-  console.log(detail);
   let detailCode = barcode;
   detailCode = detailCode.split(" ").join("");
   useEffect(() => {
     setDetail(detailCode);
   }, [detailCode]);
+
   // 뒤로가기
   const navigate = useNavigate();
   const goBack = () => {
