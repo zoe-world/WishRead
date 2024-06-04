@@ -6,9 +6,9 @@ interface PropsType {
   contents: string;
   datetime: string;
   isbn: string;
-  price: number;
+  price: string;
   publisher: string;
-  sale_price: number;
+  sale_price: string;
   status: string;
   thumbnail: string;
   title: string;
@@ -126,10 +126,8 @@ const BookSalePrice = styled.span`
   font-weight: bold;
   font-size: var(--fs-sm);
 `;
-const BookPrice = styled.span<{ $sale_price: number }>`
+const BookPrice = styled.span<{ $sale_price: string }>`
   font-size: var(--fs-sm);
-  text-decoration: ${({ $sale_price }) =>
-    $sale_price !== -1 ? "line-through" : null};
 `;
 const WishBookDate = styled.span`
   font-size: var(--fs-xs);

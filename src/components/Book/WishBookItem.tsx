@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import WishBookItemInfo from "./WishBookItemInfo";
 import WishBookItemImg from "./WishBookItemImg";
 import media from "styles/media";
-import { detailState } from "recoil/atoms/atoms";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 export interface ResultProps {
-  key: number;
   result: {
     authors: string[];
     contents: string;
     datetime: string;
     isbn: string;
-    price: number;
+    price: string;
     publisher: string;
-    sale_price: number;
+    sale_price: string;
     status: string;
     thumbnail: string;
     title: string;
     translators: string[];
     url: string;
   };
+  onWatchToggle: () => void; // watch 값을 토글하는 함수
 }
-function WishBookItem({ result }: ResultProps): JSX.Element {
+function WishBookItem({ result, onWatchToggle }: ResultProps): JSX.Element {
   const {
     authors,
     contents,
@@ -39,17 +38,16 @@ function WishBookItem({ result }: ResultProps): JSX.Element {
     translators,
     url,
   } = result;
-  const [detail, setDetail] = useRecoilState(detailState);
-  const [watch, setWatch] = useState(true);
+  let bookCode = isbn.split(" ").join("");
   return (
     <>
       <Wrapper key={result.isbn}>
         <SLink
-          to={`${detail}`}
+          to={`${bookCode}`}
           state={{
             result: result,
-            watch: watch,
           }}
+          onClick={onWatchToggle}
         >
           <WishBookItemImg title={title} thumbnail={thumbnail} page="main" />
           <WishBookItemInfo

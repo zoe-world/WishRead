@@ -7,47 +7,48 @@ import IconButton from "components/common/Button/IconButton";
 import { BookDTO } from "components/types/searchType";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { bookmarkState, detailState, recentState } from "recoil/atoms/atoms";
-import { filteredBookmarkSelector } from "recoil/selectors/selectors";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { bookDetailState, detailBookSelector } from "recoil/books";
 import styled from "styled-components";
 import FootPage from "pages/MainPage/FootPage";
 
 function DetailPage(): JSX.Element {
   const location = useLocation();
+
   // 선택된 책 정보
   const result = location.state?.result;
-  const barcode = location.state?.result.isbn;
-  // 선택됐는지 확인 여부
-  const watch = location.state.watch;
-  console.log(result);
+  let barcode = location.state?.result.isbn;
+  barcode = barcode.split(" ").join("");
 
-  // 최근 검색기록
-  const [recent, setRecent] = useRecoilState(recentState);
-  const [bookmarkList, setBookmarkList] = useRecoilState(bookmarkState);
-  const filteredBookmark = useRecoilValue(filteredBookmarkSelector(result));
+  // 상세보기 변경
+  const [detail, setDetail] = useRecoilState(bookDetailState);
+  const detailBook = useRecoilValue(detailBookSelector(barcode));
 
-  // 1.먼저 선택됐는지 안됐는지 상태값과
-  //  선택된 첵 isbn 값을 가지고 새로운 배열에 추가
-  // 만약 선택된 책 isbn 값이 배열에 있으면 빼고, 없으면 추가
-  //
+  const onBookmarkToggle = (bookCode: string) => {
+    setDetail((prevBooks: any) => {
+      return prevBooks.map((b: any) => {
+        return b.isbn.split(" ").join("") === bookCode
+          ? { ...b, isMarked: !b.isMarked }
+          : b;
+      });
+    });
+  };
+
   useEffect(() => {
-    if (watch) {
-      if (recent.findIndex((item: BookDTO) => item.isbn === barcode) === -1) {
-        const newRecent: string[] = [...recent];
-        newRecent.push(result);
-        setRecent(newRecent);
+    if (detailBook !== undefined) {
+      // 중복확인
+      const isDuplicate = detail.some(
+        (item: BookDTO) => item.isbn === detailBook.isbn
+      );
+      if (!isDuplicate) {
+        setDetail((prev: any) => [...prev, detailBook]);
       }
     }
-  }, [recent]);
-
-  // 상세보기 책
-  const [detail, setDetail] = useRecoilState(detailState);
-  let detailCode = barcode;
-  detailCode = detailCode.split(" ").join("");
+  }, [detailBook, setDetail]);
+  
   useEffect(() => {
-    setDetail(detailCode);
-  }, [detailCode]);
+    console.log(detailBook);
+  }, [detailBook]);
 
   // 뒤로가기
   const navigate = useNavigate();
@@ -56,20 +57,11 @@ function DetailPage(): JSX.Element {
   };
 
   // 나의 위시북
-  const isWishBook = bookmarkList.find(({ isbn }: BookDTO) =>
-    isbn.includes(String(barcode))
+  const isWishBook = detail?.some(
+    (v: BookDTO) => v.isbn.split(" ").join("") === barcode && v.isMarked
   );
-  const toggleBookmark = () => {
-    let wishBookList = [...bookmarkList];
 
-    if (!isWishBook) {
-      wishBookList.push(result);
-      setBookmarkList(wishBookList);
-    } else {
-      wishBookList = wishBookList.filter(({ isbn }) => isbn !== barcode);
-      setBookmarkList(wishBookList);
-    }
-  };
+  console.log(isWishBook);
 
   return (
     <Wrapper>
@@ -84,7 +76,7 @@ function DetailPage(): JSX.Element {
           icon={isWishBook ? fasBookmark : farBookmark}
           fontSize="20px"
           color="#0047AB"
-          onClick={toggleBookmark}
+          onClick={() => onBookmarkToggle(barcode)}
         ></IconButton>
       </IconWrap>
       <WishBookItemImg

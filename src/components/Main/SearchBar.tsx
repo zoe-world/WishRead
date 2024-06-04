@@ -3,8 +3,7 @@ import axios, { AxiosError } from "axios";
 import IconButton from "components/common/Button/IconButton";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { searchInfoState } from "recoil/atoms/atoms";
-import { bookData } from "recoil/selectors/api";
+import { searchInfoState } from "recoil/books";
 import styled from "styled-components";
 
 function SearchBar(): JSX.Element {

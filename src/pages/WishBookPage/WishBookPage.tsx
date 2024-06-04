@@ -1,7 +1,7 @@
 import { Title } from "pages/MainPage/MainPage";
 import React, { Fragment, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { bookmarkState } from "recoil/atoms/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { bookDetailState } from "recoil/books";
 import styled from "styled-components";
 import bgg from "../../assets/images/wood.jpg";
 import { BookDTO } from "components/types/searchType";
@@ -12,7 +12,7 @@ import media from "styles/media";
 import { useWindowResize } from "utils";
 
 function WishBookPage(): JSX.Element {
-  const [bookmarkList, setBookmarkList] = useRecoilState(bookmarkState);
+  const detail = useRecoilValue(bookDetailState);
 
   const division = (arr: [], n: number) => {
     let bookList = [...arr];
@@ -25,15 +25,13 @@ function WishBookPage(): JSX.Element {
     return newList;
   };
   const isActive = (item: BookDTO): boolean => {
-    const active = bookmarkList
-      .map((item: BookDTO) => item.isbn)
-      .includes(item.isbn);
+    const active = detail.map((item: BookDTO) => item.isbn).includes(item.isbn);
     return active;
   };
 
-  const result = division(bookmarkList, 5);
-  const mdResult = division(bookmarkList, 3);
-  const smResult = division(bookmarkList, 1);
+  const result = division(detail, 5);
+  const mdResult = division(detail, 3);
+  const smResult = division(detail, 1);
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
@@ -56,13 +54,13 @@ function WishBookPage(): JSX.Element {
         <Title>My WishBook Shelf</Title>
       </TopWrap>
       <BookshelfBox>
-        {bookmarkList.length > 0 && (
+        {detail.length > 0 && (
           <BookshelfBack>
             <div className="box__top"></div>
           </BookshelfBack>
         )}
         <BookshelfFront>
-          {bookmarkList.length > 0 ? (
+          {detail.length > 0 ? (
             width > 767 ? (
               result.map((wishBook: BookDTO[], idx: number) => (
                 <BookRow key={idx}>

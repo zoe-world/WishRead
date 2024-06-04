@@ -1,15 +1,21 @@
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
-import WishBookItem from "components/Book/WishBookItem";
 import SearchBar from "components/Main/SearchBar";
 import IconButton from "components/common/Button/IconButton";
 import { BookDTO } from "components/types/searchType";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
-import { recentState, searchInfoState } from "recoil/atoms/atoms";
-import { bookData } from "recoil/selectors/api";
+import {
+  bookDataSelectorFamily,
+  bookDataState,
+  searchInfoState,
+  detailBookSelector,
+  bookDetailState,
+} from "recoil/books";
 import styled from "styled-components";
 import FootPage from "./FootPage";
+import WishBookItem from "components/Book/WishBookItem";
+import { watch } from "fs";
 
 function MainPage(): JSX.Element {
   // 검색어 초기값 설정
@@ -20,6 +26,7 @@ function MainPage(): JSX.Element {
 
   const random = useMemo(() => randomKeyword(1, item.length), []);
   const [search, setSearch] = useRecoilState(searchInfoState);
+
   const searchKeword = (search: any) => {
     if (!search) {
       return item[random];
@@ -32,19 +39,30 @@ function MainPage(): JSX.Element {
   const navigate = useNavigate();
   const goToWishBookPage = () => navigate("/wishbook");
 
-  const bookSelector = useRecoilValue(bookData(searchKeword(search)));
+  // 검색한 결과값
+  const bookSelector = useRecoilValue(
+    bookDataSelectorFamily(searchKeword(search))
+  );
 
-  const [data, setData] = useState<BookDTO[]>();
-  const [recent, setRecent] = useRecoilState(recentState);
+  const [book, setBook] = useRecoilState(bookDataState);
 
-  const getData = () => {
-    if (recent || recent !== null) setData(recent);
-    else setData([]);
-  };
+  const detail = useRecoilValue(bookDetailState);
 
   useEffect(() => {
-    getData();
-  }, []);
+    setBook(bookSelector);
+  }, [bookSelector, setBook]);
+
+  const handleWatchToggle = (bookCode: string) => {
+    // watch 값을 토글
+    setBook((prevBooks) => {
+      return prevBooks.map((b) => {
+        console.log(b);
+        return b.isbn.split(" ").join("") == bookCode && !b.watch
+          ? { ...b, watch: !b.watch, isMarked: false }
+          : { ...b, isMarked: false };
+      });
+    });
+  };
 
   return (
     <>
@@ -72,13 +90,20 @@ function MainPage(): JSX.Element {
         <>
           <Title>최근 검색한 책</Title>
           <WishBookList>
-            {data !== undefined ? (
-              data.map((result: any) => {
-                let bookCode = result.isbn.split(" ").join("");
-                return <WishBookItem result={result} key={bookCode} />;
-              })
+            {detail.length !== 0 ? (
+              detail
+                .filter((v: any) => v.watch)
+                .map((result: any) => (
+                  <WishBookItem
+                    result={result}
+                    key={result.isbn.split(" ").join("")}
+                    onWatchToggle={() =>
+                      handleWatchToggle(result.isbn.split(" ").join(""))
+                    }
+                  />
+                ))
             ) : (
-              <p>최근 검색한 책이 없습니다.</p>
+              <>검색한 책이 없습니다.</>
             )}
           </WishBookList>
         </>
@@ -88,9 +113,15 @@ function MainPage(): JSX.Element {
 
       {!search ? <Title>추천책</Title> : <Title>검색결과</Title>}
       <WishBookList>
-        {bookSelector.map((result: any) => {
-          return <WishBookItem result={result} key={result.isbn} />;
-        })}
+        {bookSelector.map((result: BookDTO) => (
+          <WishBookItem
+            result={result}
+            key={result.isbn.split(" ").join("")}
+            onWatchToggle={() =>
+              handleWatchToggle(result.isbn.split(" ").join(""))
+            }
+          />
+        ))}
       </WishBookList>
       <FootPage page="main" />
     </>
