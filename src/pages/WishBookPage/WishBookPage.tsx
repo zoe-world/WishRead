@@ -12,8 +12,9 @@ import media from "styles/media";
 import { useWindowResize } from "utils";
 
 function WishBookPage(): JSX.Element {
-  const detail = useRecoilValue(bookDetailState);
-
+  let detail = useRecoilValue(bookDetailState);
+  detail = detail.filter((v: BookDTO) => v.isMarked);
+  console.log(detail);
   const division = (arr: [], n: number) => {
     let bookList = [...arr];
     const length = bookList.length;
@@ -28,7 +29,6 @@ function WishBookPage(): JSX.Element {
     const active = detail.map((item: BookDTO) => item.isbn).includes(item.isbn);
     return active;
   };
-
   const result = division(detail, 5);
   const mdResult = division(detail, 3);
   const smResult = division(detail, 1);

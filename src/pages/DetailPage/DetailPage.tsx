@@ -43,10 +43,8 @@ function DetailPage(): JSX.Element {
       if (!isDuplicate) {
         setDetail((prev: any) => [...prev, detailBook]);
       }
+    } else {
     }
-  }, [detailBook, setDetail]);
-  
-  useEffect(() => {
     console.log(detailBook);
   }, [detailBook]);
 
@@ -60,8 +58,6 @@ function DetailPage(): JSX.Element {
   const isWishBook = detail?.some(
     (v: BookDTO) => v.isbn.split(" ").join("") === barcode && v.isMarked
   );
-
-  console.log(isWishBook);
 
   return (
     <Wrapper>

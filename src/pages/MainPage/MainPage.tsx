@@ -56,7 +56,6 @@ function MainPage(): JSX.Element {
     // watch 값을 토글
     setBook((prevBooks) => {
       return prevBooks.map((b) => {
-        console.log(b);
         return b.isbn.split(" ").join("") == bookCode && !b.watch
           ? { ...b, watch: !b.watch, isMarked: false }
           : { ...b, isMarked: false };

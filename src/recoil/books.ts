@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { BookDTO } from "components/types/searchType";
-import { atom, selector, selectorFamily } from "recoil";
+import { DefaultValue, atom, selector, selectorFamily } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 const { persistAtom } = recoilPersist();
@@ -80,8 +80,9 @@ export const detailBookSelector = selectorFamily({
     ({ set, get }, newValue) => {
       const bookState = get(bookDataState);
       const updatedData = bookState.map((item: any) => {
+        
         if (item === newValue) {
-          return { ...item, watch: true, isMarked: false };
+          return { ...item, watch: !item.watch, isMarked: !item.isMarked };
         }
         return { ...item, watch: false, isMarked: false };
       });
