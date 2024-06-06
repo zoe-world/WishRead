@@ -11,6 +11,6 @@ export interface BookDTO {
   title: string;
   translators: string[];
   url: string;
-  watch: boolean;
+  isWatched: boolean;
   isMarked: string | boolean;
 }

@@ -8,19 +8,13 @@ const { persistAtom } = recoilPersist();
 // kakao API 호출
 const KAKAO_API_KEY = process.env.REACT_APP_KAKAO_API_KEY;
 
-// 검색한 결과값
-export const bookDataState = atom<BookDTO[]>({
-  key: "bookDataState",
-  default: [],
-});
-
 // 입력한 검색어
 export const searchInfoState = atom({
   key: "searchInfoState",
   default: "",
 });
 
-// 상세보기 책
+// 하나의 책이 가진 고유의 값(isMarked와 isWatched 값 관리) atom 으로 전역적으로 상태관리
 export const bookDetailState = atom({
   key: "bookDetailState",
   default: [],
@@ -28,8 +22,8 @@ export const bookDetailState = atom({
 });
 
 // 검색 api 호출
-export const bookDataSelectorFamily = selectorFamily({
-  key: "bookDataSelectorFamily",
+export const searchApiSelector = selectorFamily({
+  key: "searchApiSelector",
   get:
     (search) =>
     async ({ get }) => {
@@ -58,34 +52,55 @@ export const bookDataSelectorFamily = selectorFamily({
     },
 });
 
-//검색을 하고 눌르면 watch 추가
-// 그럼 추가된 아이템을 detail 담아두고 나중에 또 검색했을 때, watch 가 있으면? 그냥 냅두기
-// 없으면? detail 에 추가
-
-// 검색한 책 중 눌러본 책 필터링 후 watch 속성 추가
-export const detailBookSelector = selectorFamily({
+export const detailBookSelector = selector({
   key: "detailBookSelector",
-  get:
-    (barcode) =>
-    ({ get }) => {
-      const bookState = get(bookDataState);
-      const findItem = bookState.find(
-        (item: any) =>
-          item.isbn.split(" ").join("") === barcode && item.watch === true
-      );
-      return findItem;
-    },
-  set:
-    (barcode) =>
-    ({ set, get }, newValue) => {
-      const bookState = get(bookDataState);
-      const updatedData = bookState.map((item: any) => {
-        
-        if (item === newValue) {
-          return { ...item, watch: !item.watch, isMarked: !item.isMarked };
+  get: ({ getCallback }) => {
+    const upDateBookmarkClick = getCallback(
+      ({ set, snapshot }) =>
+        async (bookCode) => {
+          const details = await snapshot.getPromise(bookDetailState);
+          set(
+            bookDetailState,
+            details.map((detail: any) => {
+              const detailKey = Object.keys(detail)[0];
+              if (detailKey === bookCode) {
+                // bookDetailState에 등록된 책이라면?
+                // 각각의 책이 지닌 isMarked, isWatched 의 값을 업데이트
+                const updatedDetail = { ...detail[detailKey] };
+                console.log(detailKey, updatedDetail);
+                updatedDetail.isMarked = !updatedDetail.isMarked;
+                return {
+                  [detailKey]: updatedDetail,
+                };
+              }
+              return detail;
+            })
+          );
         }
-        return { ...item, watch: false, isMarked: false };
-      });
-      set(bookDataState, updatedData);
-    },
+    );
+    const upDateDetailClick = getCallback(
+      ({ set, snapshot }) =>
+        async (bookCode) => {
+          const details = await snapshot.getPromise(bookDetailState);
+          //중복확인
+          const isDuplicated = details.some(
+            (v: BookDTO) => Object.keys(v)[0] === bookCode
+          );
+          if (isDuplicated) {
+            return false;
+          } else {
+            // 새로운 책 추가
+            const newBook = {
+              [String(bookCode)]: {
+                isMarked: false,
+                isWatched: true,
+              },
+            };
+            const updatedDetails = [...details, newBook]; // 새로운 책 추가
+            set(bookDetailState, updatedDetails);
+          }
+        }
+    );
+    return { upDateDetailClick, upDateBookmarkClick };
+  },
 });

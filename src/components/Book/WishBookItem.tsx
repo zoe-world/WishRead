@@ -5,6 +5,8 @@ import WishBookItemInfo from "./WishBookItemInfo";
 import WishBookItemImg from "./WishBookItemImg";
 import media from "styles/media";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { bookDetailState, detailBookSelector } from "recoil/books";
+import { BookDTO } from "components/types/searchType";
 
 export interface ResultProps {
   result: {
@@ -21,9 +23,8 @@ export interface ResultProps {
     translators: string[];
     url: string;
   };
-  onWatchToggle: () => void; // watch 값을 토글하는 함수
 }
-function WishBookItem({ result, onWatchToggle }: ResultProps): JSX.Element {
+function WishBookItem({ result }: ResultProps): JSX.Element {
   const {
     authors,
     contents,
@@ -39,6 +40,9 @@ function WishBookItem({ result, onWatchToggle }: ResultProps): JSX.Element {
     url,
   } = result;
   let bookCode = isbn.split(" ").join("");
+
+  const { upDateDetailClick } = useRecoilValue(detailBookSelector);
+
   return (
     <>
       <Wrapper key={result.isbn}>
@@ -47,7 +51,7 @@ function WishBookItem({ result, onWatchToggle }: ResultProps): JSX.Element {
           state={{
             result: result,
           }}
-          onClick={onWatchToggle}
+          onClick={() => upDateDetailClick(bookCode)}
         >
           <WishBookItemImg title={title} thumbnail={thumbnail} page="main" />
           <WishBookItemInfo

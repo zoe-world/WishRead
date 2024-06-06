@@ -6,10 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
 import {
-  bookDataSelectorFamily,
-  bookDataState,
+  searchApiSelector,
   searchInfoState,
-  detailBookSelector,
   bookDetailState,
 } from "recoil/books";
 import styled from "styled-components";
@@ -18,50 +16,36 @@ import WishBookItem from "components/Book/WishBookItem";
 import { watch } from "fs";
 
 function MainPage(): JSX.Element {
-  // 검색어 초기값 설정
+  // 추천검색어 배열
   const item = ["이병률", "조예은", "정세랑", "김영하"];
   const randomKeyword = (min: number, max: number) => {
     return Math.trunc(Math.random() * (max - min + 1));
   };
-
   const random = useMemo(() => randomKeyword(1, item.length), []);
-  const [search, setSearch] = useRecoilState(searchInfoState);
+  const search = useRecoilValue(searchInfoState);
 
-  const searchKeword = (search: any) => {
+  /**
+   * 겁색어가 있으면 검색어로 검색어 만약 없다면?
+   * 검색어 대신 추천검색어를 랜덤으로 검색하는 함수
+   * @param search atom 전역상태관리
+   * @returns item[random] or search
+   */
+  const searchKeword = (search: string) => {
     if (!search) {
       return item[random];
     } else {
       return search;
     }
-    return true;
   };
+
   // 페이지 이동
   const navigate = useNavigate();
   const goToWishBookPage = () => navigate("/wishbook");
 
   // 검색한 결과값
-  const bookSelector = useRecoilValue(
-    bookDataSelectorFamily(searchKeword(search))
-  );
-
-  const [book, setBook] = useRecoilState(bookDataState);
+  const bookSelector = useRecoilValue(searchApiSelector(searchKeword(search)));
 
   const detail = useRecoilValue(bookDetailState);
-
-  useEffect(() => {
-    setBook(bookSelector);
-  }, [bookSelector, setBook]);
-
-  const handleWatchToggle = (bookCode: string) => {
-    // watch 값을 토글
-    setBook((prevBooks) => {
-      return prevBooks.map((b) => {
-        return b.isbn.split(" ").join("") == bookCode && !b.watch
-          ? { ...b, watch: !b.watch, isMarked: false }
-          : { ...b, isMarked: false };
-      });
-    });
-  };
 
   return (
     <>
@@ -89,21 +73,18 @@ function MainPage(): JSX.Element {
         <>
           <Title>최근 검색한 책</Title>
           <WishBookList>
-            {detail.length !== 0 ? (
+            {/* {detail.length !== 0 ? (
               detail
                 .filter((v: any) => v.watch)
                 .map((result: any) => (
                   <WishBookItem
                     result={result}
                     key={result.isbn.split(" ").join("")}
-                    onWatchToggle={() =>
-                      handleWatchToggle(result.isbn.split(" ").join(""))
-                    }
                   />
                 ))
             ) : (
               <>검색한 책이 없습니다.</>
-            )}
+            )} */}
           </WishBookList>
         </>
       ) : (
@@ -113,13 +94,7 @@ function MainPage(): JSX.Element {
       {!search ? <Title>추천책</Title> : <Title>검색결과</Title>}
       <WishBookList>
         {bookSelector.map((result: BookDTO) => (
-          <WishBookItem
-            result={result}
-            key={result.isbn.split(" ").join("")}
-            onWatchToggle={() =>
-              handleWatchToggle(result.isbn.split(" ").join(""))
-            }
-          />
+          <WishBookItem result={result} key={result.isbn.split(" ").join("")} />
         ))}
       </WishBookList>
       <FootPage page="main" />

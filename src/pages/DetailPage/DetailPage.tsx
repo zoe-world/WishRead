@@ -7,56 +7,35 @@ import IconButton from "components/common/Button/IconButton";
 import { BookDTO } from "components/types/searchType";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { bookDetailState, detailBookSelector } from "recoil/books";
+import { useRecoilValue } from "recoil";
+import {
+  bookDetailState,
+  detailBookSelector,
+  searchInfoState,
+} from "recoil/books";
 import styled from "styled-components";
 import FootPage from "pages/MainPage/FootPage";
 
 function DetailPage(): JSX.Element {
   const location = useLocation();
-
   // 선택된 책 정보
   const result = location.state?.result;
-  let barcode = location.state?.result.isbn;
-  barcode = barcode.split(" ").join("");
+  let bookCode = location.state?.result.isbn;
+  bookCode = bookCode.split(" ").join("");
 
-  // 상세보기 변경
-  const [detail, setDetail] = useRecoilState(bookDetailState);
-  const detailBook = useRecoilValue(detailBookSelector(barcode));
-
-  const onBookmarkToggle = (bookCode: string) => {
-    setDetail((prevBooks: any) => {
-      return prevBooks.map((b: any) => {
-        return b.isbn.split(" ").join("") === bookCode
-          ? { ...b, isMarked: !b.isMarked }
-          : b;
-      });
-    });
-  };
-
-  useEffect(() => {
-    if (detailBook !== undefined) {
-      // 중복확인
-      const isDuplicate = detail.some(
-        (item: BookDTO) => item.isbn === detailBook.isbn
-      );
-      if (!isDuplicate) {
-        setDetail((prev: any) => [...prev, detailBook]);
-      }
-    } else {
-    }
-    console.log(detailBook);
-  }, [detailBook]);
-
+  const { upDateBookmarkClick } = useRecoilValue(detailBookSelector);
+  const detail = useRecoilValue(bookDetailState);
   // 뒤로가기
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
-
+  useEffect(() => {
+    upDateBookmarkClick(bookCode);
+  }, [bookCode]);
   // 나의 위시북
-  const isWishBook = detail?.some(
-    (v: BookDTO) => v.isbn.split(" ").join("") === barcode && v.isMarked
+  const isWishBook = detail.find(
+    (v: BookDTO) => Object.keys(v)[0] === bookCode && Object.keys(v)[0]
   );
 
   return (
@@ -69,10 +48,10 @@ function DetailPage(): JSX.Element {
           onClick={goBack}
         />
         <IconButton
-          icon={isWishBook ? fasBookmark : farBookmark}
           fontSize="20px"
+          icon={isWishBook ? fasBookmark : farBookmark}
           color="#0047AB"
-          onClick={() => onBookmarkToggle(barcode)}
+          onClick={() => upDateBookmarkClick(bookCode)}
         ></IconButton>
       </IconWrap>
       <WishBookItemImg
