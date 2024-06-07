@@ -28,7 +28,14 @@ function App(): JSX.Element {
               </Suspense>
             }
           />
-          <Route path="/wishbook" element={<WishBookPage />} />
+          <Route
+            path="/wishbook"
+            element={
+              <Suspense fallback={<Loader />}>
+                <WishBookPage />
+              </Suspense>
+            }
+          />
         </Routes>
       </Layout>
     </BrowserRouter>

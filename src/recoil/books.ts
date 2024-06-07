@@ -21,40 +21,77 @@ export const bookDetailState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-// 검색 api 호출
+// 검색창 or 추천책을 가지고 검색 api 호출
 export const searchApiSelector = selectorFamily({
   key: "searchApiSelector",
-  get:
-    (search) =>
-    async ({ get }) => {
-      // API 호출
-      try {
-        const res = await axios({
-          method: "get",
-          baseURL: "https://dapi.kakao.com/v3/search/book",
-          headers: {
-            Authorization: "KakaoAK " + KAKAO_API_KEY,
-          },
-          params: {
-            query: search,
-            size: 50,
-            target: ["title", "person"],
-          },
-        });
-        return res.data.documents;
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.response?.status === 400) {
-            console.log(error);
-          }
+  get: (search) => async () => {
+    // 검색할 내용이 없는 경우 빈 배열 반환
+    if (!search) return [];
+
+    try {
+      const res = await axios({
+        method: "get",
+        baseURL: "https://dapi.kakao.com/v3/search/book",
+        headers: {
+          Authorization: "KakaoAK " + KAKAO_API_KEY,
+        },
+        params: {
+          query: search,
+          size: 50,
+          target: ["title", "person"],
+        },
+      });
+      return res.data.documents;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400) {
+          console.log(error);
         }
       }
-    },
+    }
+  },
+});
+// 최근 본 책의 isbn을 가지고 검색 api 호출
+export const detailApiSelector = selectorFamily({
+  key: "detailApiSelector",
+  get: (isbns: []) => async () => {
+    // 검색할 isbns이 없는 경우
+    if (isbns.length === 0) return [];
+
+    const bookDetails = await Promise.all(
+      isbns.map(async (isbn) => {
+        try {
+          const res = await axios({
+            method: "get",
+            baseURL: "https://dapi.kakao.com/v3/search/book",
+            headers: {
+              Authorization: "KakaoAK " + KAKAO_API_KEY,
+            },
+            params: {
+              query: isbn,
+              target: "isbn",
+            },
+          });
+          return res.data.documents[0];
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            if (error.response?.status === 400) {
+              console.log(error);
+            }
+          }
+        }
+      })
+    );
+
+    // 검색 결과값 중 undefined 가 있을 경우 아무것도 안 뜨면 안되니까, 필터링 후 결과 리턴
+    return bookDetails.filter(Boolean);
+  },
 });
 
 export const detailBookSelector = selector({
   key: "detailBookSelector",
   get: ({ getCallback }) => {
+    // 북마크 버튼 클릭시 일어나는 함수
     const upDateBookmarkClick = getCallback(
       ({ set, snapshot }) =>
         async (bookCode) => {
@@ -78,6 +115,7 @@ export const detailBookSelector = selector({
           );
         }
     );
+    // 책 상세보기 누르면 시작되는 함수
     const upDateDetailClick = getCallback(
       ({ set, snapshot }) =>
         async (bookCode) => {
@@ -86,6 +124,7 @@ export const detailBookSelector = selector({
           const isDuplicated = details.some(
             (v: BookDTO) => Object.keys(v)[0] === bookCode
           );
+
           if (isDuplicated) {
             return false;
           } else {

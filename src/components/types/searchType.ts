@@ -14,3 +14,10 @@ export interface BookDTO {
   isWatched: boolean;
   isMarked: string | boolean;
 }
+
+export interface DetailDTO {
+  [key: string]: {
+    isMarked: boolean;
+    isWatched: boolean;
+  };
+}

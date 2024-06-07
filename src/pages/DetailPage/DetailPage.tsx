@@ -20,22 +20,25 @@ function DetailPage(): JSX.Element {
   const location = useLocation();
   // 선택된 책 정보
   const result = location.state?.result;
-  let bookCode = location.state?.result.isbn;
-  bookCode = bookCode.split(" ").join("");
+  const bookCode = location.state?.result.isbn;
 
-  const { upDateBookmarkClick } = useRecoilValue(detailBookSelector);
+  const { upDateBookmarkClick, upDateDetailClick } =
+    useRecoilValue(detailBookSelector);
+
   const detail = useRecoilValue(bookDetailState);
   // 뒤로가기
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
+
   useEffect(() => {
-    upDateBookmarkClick(bookCode);
+    upDateDetailClick(result.isbn);
   }, [bookCode]);
-  // 나의 위시북
-  const isWishBook = detail.find(
-    (v: BookDTO) => Object.keys(v)[0] === bookCode && Object.keys(v)[0]
+
+  // 북마크가 되어있는지 확인
+  const isBookmark = detail.find(
+    (v: BookDTO) => Object.keys(v)[0] === result.isbn
   );
 
   return (
@@ -49,9 +52,9 @@ function DetailPage(): JSX.Element {
         />
         <IconButton
           fontSize="20px"
-          icon={isWishBook ? fasBookmark : farBookmark}
+          icon={isBookmark[bookCode].isMarked ? fasBookmark : farBookmark}
           color="#0047AB"
-          onClick={() => upDateBookmarkClick(bookCode)}
+          onClick={() => upDateBookmarkClick(result.isbn)}
         ></IconButton>
       </IconWrap>
       <WishBookItemImg

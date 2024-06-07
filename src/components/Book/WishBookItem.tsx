@@ -4,9 +4,8 @@ import styled from "styled-components";
 import WishBookItemInfo from "./WishBookItemInfo";
 import WishBookItemImg from "./WishBookItemImg";
 import media from "styles/media";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { bookDetailState, detailBookSelector } from "recoil/books";
-import { BookDTO } from "components/types/searchType";
+import { useRecoilValue } from "recoil";
+import { detailBookSelector } from "recoil/books";
 
 export interface ResultProps {
   result: {
@@ -39,7 +38,6 @@ function WishBookItem({ result }: ResultProps): JSX.Element {
     translators,
     url,
   } = result;
-  let bookCode = isbn.split(" ").join("");
 
   const { upDateDetailClick } = useRecoilValue(detailBookSelector);
 
@@ -47,11 +45,11 @@ function WishBookItem({ result }: ResultProps): JSX.Element {
     <>
       <Wrapper key={result.isbn}>
         <SLink
-          to={`${bookCode}`}
+          to={`${result.isbn}`}
           state={{
             result: result,
           }}
-          onClick={() => upDateDetailClick(bookCode)}
+          onClick={() => upDateDetailClick(result.isbn)}
         >
           <WishBookItemImg title={title} thumbnail={thumbnail} page="main" />
           <WishBookItemInfo

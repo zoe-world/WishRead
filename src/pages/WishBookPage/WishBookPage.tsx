@@ -1,10 +1,10 @@
 import { Title } from "pages/MainPage/MainPage";
 import React, { Fragment, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { bookDetailState } from "recoil/books";
+import { bookDetailState, detailApiSelector } from "recoil/books";
 import styled from "styled-components";
 import bgg from "../../assets/images/wood.jpg";
-import { BookDTO } from "components/types/searchType";
+import { BookDTO, DetailDTO } from "components/types/searchType";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import IconButton from "components/common/Button/IconButton";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
@@ -12,10 +12,23 @@ import media from "styles/media";
 import { useWindowResize } from "utils";
 
 function WishBookPage(): JSX.Element {
-  let detail = useRecoilValue(bookDetailState);
-  detail = detail.filter((v: BookDTO) => v.isMarked);
-  console.log(detail);
-  const division = (arr: [], n: number) => {
+  const detail = useRecoilValue(bookDetailState);
+
+  // 북마크한 책
+  const isMarkedBooks = detail
+    .filter(
+      (isMarkedBook: any) => isMarkedBook[Object.keys(isMarkedBook)[0]].isMarked
+    )
+    .map((isMarkedBook: DetailDTO) => Object.keys(isMarkedBook)[0]);
+
+  // 최근에 검색한 책의 isbn 중 앞 숫자만 배열에 담기
+  const markedIsbn = isMarkedBooks.map(
+    (markedIsbn: any) => markedIsbn.trim().split(" ")[0]
+  );
+  // 배열에 담긴 Isbn 을 다시 재검색
+  const bookDetailSelector = useRecoilValue(detailApiSelector(markedIsbn));
+
+  const division = (arr: any[], n: number) => {
     let bookList = [...arr];
     const length = bookList.length;
     const row = Math.ceil(length / n);
@@ -26,18 +39,22 @@ function WishBookPage(): JSX.Element {
     return newList;
   };
   const isActive = (item: BookDTO): boolean => {
-    const active = detail.map((item: BookDTO) => item.isbn).includes(item.isbn);
+    const active = bookDetailSelector
+      .map((item: BookDTO) => item.isbn)
+      .includes(item.isbn);
     return active;
   };
-  const result = division(detail, 5);
-  const mdResult = division(detail, 3);
-  const smResult = division(detail, 1);
+  const result = division(bookDetailSelector, 5);
+  const mdResult = division(bookDetailSelector, 3);
+  const smResult = division(bookDetailSelector, 1);
+
   const navigate = useNavigate();
+
   const goBack = () => {
     navigate(-1);
   };
   const goDetail = (item: BookDTO) => {
-    let bookCode = item.isbn.split(" ").join("");
+    let bookCode = item.isbn;
     navigate(`/${bookCode}`, { state: { result: item } });
   };
   // window 사이즈 감시
@@ -86,7 +103,11 @@ function WishBookPage(): JSX.Element {
                               onClick={() => (active ? goDetail(item) : null)}
                             >
                               <img
-                                src={item["thumbnail"]}
+                                src={
+                                  item["thumbnail"]
+                                    ? item["thumbnail"]
+                                    : require("assets/images/noimage.png")
+                                }
                                 alt={item["title"]}
                               />
                             </BookLink>
@@ -125,7 +146,11 @@ function WishBookPage(): JSX.Element {
                               onClick={() => (active ? goDetail(item) : null)}
                             >
                               <img
-                                src={item["thumbnail"]}
+                                src={
+                                  item["thumbnail"]
+                                    ? item["thumbnail"]
+                                    : require("assets/images/noimage.png")
+                                }
                                 alt={item["title"]}
                               />
                             </BookLink>
@@ -169,7 +194,11 @@ function WishBookPage(): JSX.Element {
                               onClick={() => (active ? goDetail(item) : null)}
                             >
                               <img
-                                src={item["thumbnail"]}
+                                src={
+                                  item["thumbnail"]
+                                    ? item["thumbnail"]
+                                    : require("assets/images/noimage.png")
+                                }
                                 alt={item["title"]}
                               />
                             </BookLink>

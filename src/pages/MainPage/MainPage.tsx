@@ -1,7 +1,7 @@
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "components/Main/SearchBar";
 import IconButton from "components/common/Button/IconButton";
-import { BookDTO } from "components/types/searchType";
+import { BookDTO, DetailDTO } from "components/types/searchType";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
@@ -9,11 +9,11 @@ import {
   searchApiSelector,
   searchInfoState,
   bookDetailState,
+  detailApiSelector,
 } from "recoil/books";
 import styled from "styled-components";
 import FootPage from "./FootPage";
 import WishBookItem from "components/Book/WishBookItem";
-import { watch } from "fs";
 
 function MainPage(): JSX.Element {
   // 추천검색어 배열
@@ -30,7 +30,7 @@ function MainPage(): JSX.Element {
    * @param search atom 전역상태관리
    * @returns item[random] or search
    */
-  const searchKeword = (search: string) => {
+  const searchKeword = (search: string | []) => {
     if (!search) {
       return item[random];
     } else {
@@ -45,7 +45,23 @@ function MainPage(): JSX.Element {
   // 검색한 결과값
   const bookSelector = useRecoilValue(searchApiSelector(searchKeword(search)));
 
+  // 각 책이 가진 isMarked, isWatched 값
   const detail = useRecoilValue(bookDetailState);
+  console.log(bookSelector, detail);
+  // 최근 검색한 책
+  const watchedBooks = detail
+    .filter(
+      (watchedBook: any) => watchedBook[Object.keys(watchedBook)[0]].isWatched
+    )
+    .map((watchedBook: DetailDTO) => Object.keys(watchedBook)[0]);
+
+  // 최근에 검색한 책의 isbn 중 앞 숫자만 배열에 담기
+  const watchedIsbn = watchedBooks.map(
+    (watchedIsbn: any) => watchedIsbn.trim().split(" ")[0]
+  );
+
+  // 배열에 담긴 isbn 을 다시 재검색
+  const bookDetailSelector = useRecoilValue(detailApiSelector(watchedIsbn));
 
   return (
     <>
@@ -73,18 +89,13 @@ function MainPage(): JSX.Element {
         <>
           <Title>최근 검색한 책</Title>
           <WishBookList>
-            {/* {detail.length !== 0 ? (
-              detail
-                .filter((v: any) => v.watch)
-                .map((result: any) => (
-                  <WishBookItem
-                    result={result}
-                    key={result.isbn.split(" ").join("")}
-                  />
-                ))
+            {detail.length !== 0 ? (
+              bookDetailSelector.map((watchedBook: any) => (
+                <WishBookItem result={watchedBook} key={watchedBook.isbn} />
+              ))
             ) : (
               <>검색한 책이 없습니다.</>
-            )} */}
+            )}
           </WishBookList>
         </>
       ) : (
@@ -94,7 +105,7 @@ function MainPage(): JSX.Element {
       {!search ? <Title>추천책</Title> : <Title>검색결과</Title>}
       <WishBookList>
         {bookSelector.map((result: BookDTO) => (
-          <WishBookItem result={result} key={result.isbn.split(" ").join("")} />
+          <WishBookItem result={result} key={result.isbn} />
         ))}
       </WishBookList>
       <FootPage page="main" />
