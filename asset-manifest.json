@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Wishread/static/css/main.44eab33a.css",
-    "main.js": "/Wishread/static/js/main.b8f8afea.js",
+    "main.js": "/Wishread/static/js/main.4d79ae03.js",
     "static/media/Pretendard-Bold.woff": "/Wishread/static/media/Pretendard-Bold.1f1dbbbf311ffffcc770.woff",
     "static/media/Pretendard-Medium.woff": "/Wishread/static/media/Pretendard-Medium.edd5e28caa1cc4a9e0b7.woff",
     "static/media/Pretendard-Light.woff": "/Wishread/static/media/Pretendard-Light.7d1a33b829142e833fb9.woff",
@@ -13,10 +13,10 @@
     "static/media/wood.jpg": "/Wishread/static/media/wood.1c6c57a04f3400f9b40a.jpg",
     "index.html": "/Wishread/index.html",
     "main.44eab33a.css.map": "/Wishread/static/css/main.44eab33a.css.map",
-    "main.b8f8afea.js.map": "/Wishread/static/js/main.b8f8afea.js.map"
+    "main.4d79ae03.js.map": "/Wishread/static/js/main.4d79ae03.js.map"
   },
   "entrypoints": [
     "static/css/main.44eab33a.css",
-    "static/js/main.b8f8afea.js"
+    "static/js/main.4d79ae03.js"
   ]
 }
