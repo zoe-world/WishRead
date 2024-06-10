@@ -25,6 +25,7 @@ function WishBookPage(): JSX.Element {
   const markedIsbn = isMarkedBooks.map(
     (markedIsbn: any) => markedIsbn.trim().split(" ")[0]
   );
+
   // 배열에 담긴 Isbn 을 다시 재검색
   const bookDetailSelector = useRecoilValue(detailApiSelector(markedIsbn));
 
@@ -71,13 +72,13 @@ function WishBookPage(): JSX.Element {
         <Title>My WishBook Shelf</Title>
       </TopWrap>
       <BookshelfBox>
-        {detail.length > 0 && (
+        {isMarkedBooks.length > 0 && (
           <BookshelfBack>
             <div className="box__top"></div>
           </BookshelfBack>
         )}
         <BookshelfFront>
-          {detail.length > 0 ? (
+          {isMarkedBooks.length > 0 ? (
             width > 767 ? (
               result.map((wishBook: BookDTO[], idx: number) => (
                 <BookRow key={idx}>

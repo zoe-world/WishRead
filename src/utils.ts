@@ -1,7 +1,6 @@
-// window Resize hooks
-
 import { useEffect, useState } from "react";
 
+// window Resize hooks
 type Windowsize = [number, number];
 
 export const useWindowResize = (): Windowsize => {

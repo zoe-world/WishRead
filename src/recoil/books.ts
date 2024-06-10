@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { BookDTO } from "components/types/searchType";
 import { DefaultValue, atom, selector, selectorFamily } from "recoil";
 import { recoilPersist } from "recoil-persist";

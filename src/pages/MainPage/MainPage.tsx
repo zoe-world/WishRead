@@ -2,7 +2,7 @@ import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "components/Main/SearchBar";
 import IconButton from "components/common/Button/IconButton";
 import { BookDTO, DetailDTO } from "components/types/searchType";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { selector, useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -47,7 +47,7 @@ function MainPage(): JSX.Element {
 
   // 각 책이 가진 isMarked, isWatched 값
   const detail = useRecoilValue(bookDetailState);
-  console.log(bookSelector, detail);
+
   // 최근 검색한 책
   const watchedBooks = detail
     .filter(
@@ -89,7 +89,7 @@ function MainPage(): JSX.Element {
         <>
           <Title>최근 검색한 책</Title>
           <WishBookList>
-            {detail.length !== 0 ? (
+            {watchedBooks.length !== 0 ? (
               bookDetailSelector.map((watchedBook: any) => (
                 <WishBookItem result={watchedBook} key={watchedBook.isbn} />
               ))
@@ -104,9 +104,13 @@ function MainPage(): JSX.Element {
 
       {!search ? <Title>추천책</Title> : <Title>검색결과</Title>}
       <WishBookList>
-        {bookSelector.map((result: BookDTO) => (
-          <WishBookItem result={result} key={result.isbn} />
-        ))}
+        {bookSelector.length !== 0 ? (
+          bookSelector.map((result: BookDTO) => (
+            <WishBookItem result={result} key={result.isbn} />
+          ))
+        ) : (
+          <>검색 결과가 없습니다.</>
+        )}
       </WishBookList>
       <FootPage page="main" />
     </>

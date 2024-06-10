@@ -12,7 +12,6 @@ function SearchBar(): JSX.Element {
   const [text, setText] = useState("");
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
     setText(event.target.value);
   };
   const onSearch = () => {

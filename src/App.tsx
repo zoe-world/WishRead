@@ -5,7 +5,16 @@ import styled from "styled-components";
 import Loader from "components/common/Load/Loader";
 import DetailPage from "pages/DetailPage/DetailPage";
 
-const MainPage = React.lazy(() => import("./pages/MainPage/MainPage"));
+// const MainPage = React.lazy(() => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => resolve(import("./pages/MainPage/MainPage")), 300);
+//   });
+// });
+const MainPage = React.lazy(() => {
+  return new Promise<{ default: React.ComponentType }>((resolve) => {
+    setTimeout(() => resolve(import("./pages/MainPage/MainPage")), 2000);
+  });
+});
 
 function App(): JSX.Element {
   return (

@@ -84,6 +84,7 @@ const Wrapper = styled.div<{ $page: string }>`
 const WishBookInfo = styled.dl`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0 1.3rem;
   margin-bottom: 1rem;
   &.last {
