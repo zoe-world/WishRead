@@ -9,6 +9,35 @@
 - 인원 : FE 및 디자인: 이조은 인원 1명
 - 기간 : 약 1개월 (24/5 ~)
 
+<table>
+  <tbody>
+    <tr>
+      <th style="text-align: center">검색창</th>
+      <th style="text-align: center">상세보기</th>
+    </tr> 
+    <tr>
+      <td>
+      <img src="https://github.com/zoe-world/Wishread/assets/114548167/69cba3d4-d74f-4bcd-bcf7-fc1f1ab21b3b" alt=""/>
+      </td>
+      <td>
+        <img src="https://github.com/zoe-world/Wishread/assets/114548167/158b5566-b378-49b6-a3b1-00ea35b9651f"alt=""/>
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: center">로딩화면 + 메인 화면 랜덤 추천책 </th>
+      <th style="text-align: center">위시리스트 책장 </th>
+    </tr> 
+    <tr>
+      <td>
+        <img src="https://github.com/zoe-world/Wishread/assets/114548167/0d5276d9-49cf-46c1-8d82-2b0b12168a6b" alt=""/>
+      </td>
+      <td>
+        <img src="https://github.com/zoe-world/Wishread/assets/114548167/69cba3d4-d74f-4bcd-bcf7-fc1f1ab21b3b" alt=""/>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 ## 📌 프로젝트의 주요 목표
 
 - 오픈 API 다루기연습
@@ -33,12 +62,6 @@
     <img src="https://img.shields.io/badge/fontawesome-538DD7?style=for-the-badge&logo=fontawesome&logoColor=white">
     <img src="https://img.shields.io/badge/styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">
 </div>
-
-|                                                              검색창                                                              |                                                      상세보기                                                      |
-| :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
-|       ![검색창 화면](https://github.com/zoe-world/Wishread/assets/114548167/f943933a-9ef9-480a-bd89-d953801706cf)       | ![책 상세보기](https://github.com/zoe-world/Wishread/assets/114548167/158b5566-b378-49b6-a3b1-00ea35b9651f) |
-|                                                 로딩화면 + 메인 화면 랜덤 추천책                                                 |                                                  위시리스트 책장                                                   |
-| ![랜덤추천 및 추천책](https://github.com/zoe-world/Wishread/assets/114548167/0d5276d9-49cf-46c1-8d82-2b0b12168a6b) |  ![위시리스트](https://github.com/zoe-world/Wishread/assets/114548167/69cba3d4-d74f-4bcd-bcf7-fc1f1ab21b3b)   |
 
 ## 사용기술
 
