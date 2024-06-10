@@ -9,6 +9,15 @@
 - 인원 : FE 및 디자인: 이조은 인원 1명
 - 기간 : 약 1개월 (24/5 ~)
 
+## 📌 프로젝트의 주요 목표
+
+- 오픈 API 다루기연습
+- recoil의 selector를 통해 API로 받아온 데이터 캐싱
+- react-router-dom을 활용한 상세페이지 이동
+- recoil의 atom, selector를 이용하여 검색, 필터링 기능 구현
+- 학습한 typescript를 이용한 타입지정
+- Styled-Component을 활용하여 스타일 관리
+
 ## 🔧 기술스택
 
 <div align="center">
@@ -25,11 +34,11 @@
     <img src="https://img.shields.io/badge/styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white">
 </div>
 
-| 책 검색 | 책 상세정보 |
-| ![검색창 화면](https://github.com/zoe-world/Wishread/assets/114548167/f943933a-9ef9-480a-bd89-d953801706cf) | ![책 상세보기](https://github.com/zoe-world/Wishread/assets/114548167/158b5566-b378-49b6-a3b1-00ea35b9651f) |
-| ------- | ------ |
-| 로딩 랜덤 추천책 | 위시리스트 책장 |
-| ![랜덤추천 및 추천책](https://github.com/zoe-world/Wishread/assets/114548167/0d5276d9-49cf-46c1-8d82-2b0b12168a6b) | ![위시리스트](https://github.com/zoe-world/Wishread/assets/114548167/69cba3d4-d74f-4bcd-bcf7-fc1f1ab21b3b)|
+|                                                              검색창                                                              |                                                      상세보기                                                      |
+| :------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
+|       ![검색창 화면](https://github.com/zoe-world/Wishread/assets/114548167/f943933a-9ef9-480a-bd89-d953801706cf)       | ![책 상세보기](https://github.com/zoe-world/Wishread/assets/114548167/158b5566-b378-49b6-a3b1-00ea35b9651f) |
+|                                                 로딩화면 + 메인 화면 랜덤 추천책                                                 |                                                  위시리스트 책장                                                   |
+| ![랜덤추천 및 추천책](https://github.com/zoe-world/Wishread/assets/114548167/0d5276d9-49cf-46c1-8d82-2b0b12168a6b) |  ![위시리스트](https://github.com/zoe-world/Wishread/assets/114548167/69cba3d4-d74f-4bcd-bcf7-fc1f1ab21b3b)   |
 
 ## 사용기술
 
@@ -38,15 +47,6 @@
 - 상태관리 : recoil
 - style : styled-component, fontawesome
 - 데이터 : kakao api
-
-## 프로젝트의 주요 목표
-
-- 오픈 API 다루기연습
-- recoil의 selector를 통해 API로 받아온 데이터 캐싱
-- react-router-dom을 활용한 상세페이지 이동
-- recoil의 atom, selector를 이용하여 검색, 필터링 기능 구현
-- 학습한 typescript를 이용한 타입지정
-- Styled-Component을 활용하여 스타일 관리
 
 ## 주요기능에 대한 간단한 설명
 
@@ -57,19 +57,17 @@
 - 최근 검색한 책 localStorage에 데이터 저장
 - 랜덤 추천책 기능 구현
 - My WistList를 모아볼 수 있으며, localStorage에 데이터 저장
-
-### 📝 스타일링
-
-Styled-Component을 활용하여 전역적 관리가 필요한 스타일은 Global Style을 사용  
-다양한 디바이스에 유연한 반응형 작업을 위해 Breakpoints로 일관되게 관리
-Props를 활용한 공통 스타일링 작업
+- Styled-Component을 활용하여 전역적 관리가 필요한 스타일은 Global Style을 사용
+- 다양한 디바이스에 유연한 반응형 작업을 위해 Breakpoints로 일관되게 관리
+- Props를 활용한 공통 스타일링 작업
 
 ## ver 2.1
 
 - recoil의 selector(getCallback, snapshots) 사용하여 불필요한 재렌더링 방지  
   (기존) 검색결과, 최근 검색한 책, 북마크 책 개별 localStorage 저장  
   (변경) 검색한 책 localStorage 로 저장 => isMarked, isWatched 라는 속성추가
-  > <b>하나의 데이터로 북마크, 최근 검색한 책을 필러링 가능하게 처리</b>
+
+> <b>하나의 데이터로 북마크, 최근 검색한 책을 필러링 가능하게 처리</b>
 
 ## ver 2.0
 
@@ -80,7 +78,7 @@ Props를 활용한 공통 스타일링 작업
 
 - recoil의 selectorFamily를 통해 데이터를 캐싱  
   (기존) 메인화면이 마운트될 때마다 API 호출  
-  (변경) 초기 앱 실행 시에만 API를 호출하고, 이후에는 캐싱된 데이터 사용
+  (변경) 초기 실행 시에만 API를 호출하고, 이후에는 캐싱된 데이터 사용
 
 ## ver 1.0
 
